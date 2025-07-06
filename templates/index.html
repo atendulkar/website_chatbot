@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>NAIC Chatbot</title>
+    <style>
+        body { font-family: Arial; margin: 20px; }
+        #chat { border: 1px solid #ccc; padding: 10px; height: 400px; overflow-y: scroll; margin-bottom: 10px; }
+        .user { color: blue; }
+        .bot { color: green; }
+        .button-bar { margin-bottom: 10px; }
+    </style>
+</head>
+<body>
+    <h1>NAIC Chatbot</h1>
+    <div class="button-bar">
+        <button onclick="startChat()">Start Chat</button>
+        <button onclick="exitChat()">Exit</button>
+        <button onclick="clearChat()">Clear Chat</button>
+    </div>
+    <div id="chat"></div>
+    <input type="text" id="userInput" placeholder="Type your question..." onkeydown="if(event.key==='Enter'){sendMessage();}">
+    <button onclick="sendMessage()">Send</button>
+
+    <script>
+        function appendMessage(sender, text) {
+            const chat = document.getElementById('chat');
+            const msg = document.createElement('div');
+            msg.className = sender;
+            msg.innerText = (sender === 'user' ? 'You: ' : 'Bot: ') + text;
+            chat.appendChild(msg);
+            chat.scrollTop = chat.scrollHeight;
+        }
+
+        function sendMessage() {
+            const input = document.getElementById('userInput');
+            const text = input.value.trim();
+            if (!text) return;
+            appendMessage('user', text);
+            input.value = '';
+
+            fetch('/chat', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ message: text })
+            })
+            .then(res => res.json())
+            .then(data => appendMessage('bot', data.response));
+        }
+
+        function startChat() {
+            appendMessage('bot', 'Chat started. How can I help you with NAIC information?');
+        }
+
+        function exitChat() {
+            appendMessage('bot', 'Session ended. Have a great day!');
+        }
+
+        function clearChat() {
+            document.getElementById('chat').innerHTML = '';
+        }
+    </script>
+</body>
+</html>
