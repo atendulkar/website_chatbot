@@ -9,6 +9,7 @@ Activate the new virtual environment in a new directory
 Clone git repo and navigate into it
 ```bash
 git clone https://github.com/atendulkar/website_chatbot.git 
+mv website_chatbot/ websitechatbot
 cd websitechatbot
 ```
 Create the virtual environment
@@ -85,7 +86,8 @@ Finally, we set up Nginx as a reverse-proxy to accept the requests from the user
 
 Install Nginx 
 ```bash
-sudo apt-get nginx
+sudo apt update
+sudo apt install nginx
 ```
 Start the Nginx service and go to the Public IP address of your EC2 on the browser to see the default nginx landing page
 ```bash
@@ -102,7 +104,7 @@ upstream flaskwebsitechatbot {
     server 127.0.0.1:8000;
 }
 ```
-Add a proxy_pass to flaskhelloworld atlocation /
+Add a proxy_pass to flaskwebsitechatbot atlocation /
 ```bash
 location / {
     proxy_pass http://flaskwebsitechatbot;
