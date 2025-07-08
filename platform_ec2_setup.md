@@ -104,11 +104,28 @@ upstream flaskwebsitechatbot {
     server 127.0.0.1:8000;
 }
 ```
-Add a proxy_pass to flaskwebsitechatbot atlocation /
+Add a proxy_pass to flaskwebsitechatbot at location /
+```bash
+location / {
+    proxy_pass http://127.0.0.1:8000;
+    proxy_set_header Host $host;
+    proxy_set_header X-Real-IP $remote_addr;
+}
+
+location /chat {
+    proxy_pass http://127.0.0.1:8000;
+    proxy_set_header Host $host;
+    proxy_set_header X-Real-IP $remote_addr;
+}
+
+```
+
+Optional if above config not worked.
 ```bash
 location / {
     proxy_pass http://flaskwebsitechatbot;
 }
+
 ```
 Restart Nginx 
 ```bash
